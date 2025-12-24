@@ -153,9 +153,8 @@ export default function Home() {
     }
     setSelectedImages(newSelected);
 
-    if (newSelected.size === 0) {
-      setSelectMode(false);
-    }
+    // 有选中时进入选择模式，无选中时退出
+    setSelectMode(newSelected.size > 0);
   };
 
   // 长按进入选择模式
@@ -403,26 +402,24 @@ function ImageCard({
         }}
       />
 
-      {/* 选择模式指示器 */}
-      {selectMode && (
-        <div
-          className={`absolute top-2 left-2 w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-            selected
-              ? "bg-green-500 border-green-500"
-              : "bg-white/80 border-gray-400"
-          }`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect();
-          }}
-        >
-          {selected && (
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-            </svg>
-          )}
-        </div>
-      )}
+      {/* 选择圆圈 - 始终显示 */}
+      <div
+        className={`absolute top-2 left-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+          selected
+            ? "bg-green-500 border-green-500"
+            : "bg-white/50 border-white/80 backdrop-blur-sm"
+        }`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect();
+        }}
+      >
+        {selected && (
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </div>
 
       {/* 悬浮菜单（桌面端） */}
       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">

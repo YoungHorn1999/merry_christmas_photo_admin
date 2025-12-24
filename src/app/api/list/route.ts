@@ -5,6 +5,14 @@ export const runtime = "edge";
 
 export async function GET() {
   try {
+    // 检查环境变量
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json(
+        { success: false, error: "BLOB_READ_WRITE_TOKEN 环境变量未配置" },
+        { status: 500 }
+      );
+    }
+
     const { blobs } = await list();
 
     // 按上传时间倒序排列（最新的在前）
@@ -23,8 +31,9 @@ export async function GET() {
     });
   } catch (error) {
     console.error("List error:", error);
+    const message = error instanceof Error ? error.message : "未知错误";
     return NextResponse.json(
-      { success: false, error: "获取图片列表失败" },
+      { success: false, error: `获取图片列表失败: ${message}` },
       { status: 500 }
     );
   }
